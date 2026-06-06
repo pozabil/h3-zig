@@ -15,6 +15,7 @@ Scope: `src/root.zig` safe wrappers over upstream H3 `v4.5.0` public `h3api.h`.
   - `zig build --summary all`
   - cross-compile smoke for Linux/Windows x64/arm64 targets
 - Verified local macOS memory checks with `/usr/bin/leaks --atExit` for all three Zig test executables.
+- Configured Linux CI memory checks through `zig build test-valgrind --summary all`.
 
 ## Audit Summary
 
@@ -81,4 +82,4 @@ The caller owns returned Zig slices and must free them. `GridDiskDistances.deini
 - Not every upstream public testapp or CLI fixture has been ported into Zig yet.
 - CI workflow is configured but must still run on GitHub-hosted runners after the local-only repo is pushed.
 - Cross-compile jobs are build-only unless a runner or emulator executes the target binaries.
-- Memory leak checking is currently local-only; CI does not yet run sanitizer or Valgrind-style memory gates.
+- The Linux Valgrind memory gate is configured but must still pass on GitHub-hosted runners.

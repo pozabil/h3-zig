@@ -67,9 +67,14 @@ pub fn build(b: *std.Build) void {
     });
 
     const test_step = b.step("test", "Run unit and public-contract tests");
-    test_step.dependOn(&b.addRunArtifact(tests).step);
-    test_step.dependOn(&b.addRunArtifact(contract_tests).step);
-    test_step.dependOn(&b.addRunArtifact(upstream_fixture_tests).step);
+    addTestRun(b, test_step, tests);
+    addTestRun(b, test_step, contract_tests);
+    addTestRun(b, test_step, upstream_fixture_tests);
+
+    const valgrind_step = b.step("test-valgrind", "Run unit and public-contract tests under Valgrind");
+    addValgrindRun(b, valgrind_step, tests);
+    addValgrindRun(b, valgrind_step, contract_tests);
+    addValgrindRun(b, valgrind_step, upstream_fixture_tests);
 }
 
 fn addH3C(b: *std.Build, module: *std.Build.Module, target: std.Build.ResolvedTarget) void {
@@ -86,4 +91,21 @@ fn addH3C(b: *std.Build, module: *std.Build.Module, target: std.Build.ResolvedTa
     if (target.result.os.tag != .windows) {
         module.linkSystemLibrary("m", .{});
     }
+}
+
+fn addTestRun(b: *std.Build, step: *std.Build.Step, artifact: *std.Build.Step.Compile) void {
+    step.dependOn(&b.addRunArtifact(artifact).step);
+}
+
+fn addValgrindRun(b: *std.Build, step: *std.Build.Step, artifact: *std.Build.Step.Compile) void {
+    const run = b.addSystemCommand(&.{
+        "valgrind",
+        "--leak-check=full",
+        "--show-leak-kinds=definite,possible",
+        "--errors-for-leak-kinds=definite,possible",
+        "--error-exitcode=1",
+        "--quiet",
+    });
+    run.addArtifactArg(artifact);
+    step.dependOn(&run.step);
 }

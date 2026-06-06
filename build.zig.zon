@@ -1,0 +1,21 @@
+.{
+    .name = .h3,
+    .version = "0.1.0",
+    .fingerprint = 0x532d9246da43153b, // Changing this has security and trust implications.
+    .minimum_zig_version = "0.15.2",
+    .dependencies = .{},
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+        "test",
+        "vendor/h3/src/h3lib/include",
+        "vendor/h3/src/h3lib/lib",
+        "vendor/h3/LICENSE",
+        "vendor/h3/NOTICE",
+        "vendor/h3/VERSION",
+        "README.md",
+        "LICENSE",
+        "NOTICE",
+    },
+}

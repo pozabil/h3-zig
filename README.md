@@ -37,7 +37,7 @@ The tests are derived from upstream public H3 examples, CLI fixtures, and test f
 
 `zig build test-valgrind` runs the same unit and public-contract test executables under Valgrind on Linux systems with Valgrind installed.
 
-GitHub Actions runs native tests on Linux x64, Linux arm64, Windows x64, macOS Intel, and macOS arm64 in both Debug and ReleaseSafe modes. It also runs a Linux Valgrind memory gate and cross-compiles library artifacts for Linux and Windows x64/arm64 targets. These platforms remain candidates until the workflow has passed on GitHub-hosted runners for the default branch.
+GitHub Actions runs native tests on Linux x64, Linux arm64, Windows x64, macOS Intel, and macOS arm64 in both Debug and ReleaseSafe modes. It also runs a Linux Valgrind memory gate and cross-compiles library artifacts for Linux and Windows x64/arm64 targets. The supported native runtime matrix and build-only cross-compile matrix have passed the GitHub-hosted `CI` workflow on the default branch.
 
 See [Support Policy](docs/support-policy.md) for the exact support matrix and release requirements. See [Safe Wrapper Audit](docs/safe-wrapper-audit.md) for current ownership, buffer, and error-semantics review notes.
 

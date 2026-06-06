@@ -6,30 +6,32 @@ This package targets Zig `0.15.2` and vendors upstream H3 `v4.5.0`.
 
 A platform is considered supported only after the GitHub Actions `CI` workflow passes for that platform on the default branch. Local cross-compilation is useful evidence, but it is not a substitute for a green hosted runner when runtime behavior is claimed.
 
-## Candidate Native Runtime Matrix
+Current status: the GitHub-hosted `CI` workflow has passed for the native runtime matrix and build-only matrix on the default branch.
+
+## Supported Native Runtime Matrix
 
 These targets are configured to run `zig build test`, the consumer integration test, formatting, API coverage, and the library build in GitHub Actions:
 
 | Platform | Runner | Status |
 |---|---|---|
-| Linux x64 | `ubuntu-24.04` | Candidate until first green CI run |
-| Linux arm64 | `ubuntu-24.04-arm` | Candidate until first green CI run |
-| Windows x64 | `windows-2025` | Candidate until first green CI run |
-| macOS Intel | `macos-15-intel` | Candidate until first green CI run |
-| macOS arm64 | `macos-14` | Candidate until first green CI run |
+| Linux x64 | `ubuntu-24.04` | Supported |
+| Linux arm64 | `ubuntu-24.04-arm` | Supported |
+| Windows x64 | `windows-2025` | Supported |
+| macOS Intel | `macos-15-intel` | Supported |
+| macOS arm64 | `macos-14` | Supported |
 
 Native runtime jobs run both `Debug` and `ReleaseSafe` optimization modes.
 
-## Candidate Build-Only Matrix
+## Verified Build-Only Matrix
 
 These targets are configured as cross-compile smoke builds. They prove that the vendored C library and Zig module compile for the target, but they do not execute tests on that target:
 
 | Target | Status |
 |---|---|
-| `x86_64-linux-musl` | Build-only candidate until first green CI run |
-| `aarch64-linux-musl` | Build-only candidate until first green CI run |
-| `x86_64-windows-gnu` | Build-only candidate until first green CI run |
-| `aarch64-windows-gnu` | Build-only candidate until first green CI run |
+| `x86_64-linux-musl` | Build-only verified |
+| `aarch64-linux-musl` | Build-only verified |
+| `x86_64-windows-gnu` | Build-only verified |
+| `aarch64-windows-gnu` | Build-only verified |
 
 ## Not Currently Supported
 

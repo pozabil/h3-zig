@@ -194,7 +194,7 @@ pub fn gridDiskDistancesSafe(origin: H3Index, k: c_int, out: []H3Index, distance
     try check(c.gridDiskDistancesSafe(origin, k, out.ptr, distances.ptr));
 }
 
-pub fn gridDisksUnsafe(h3_set: []H3Index, k: c_int, out: []H3Index) Error!void {
+pub fn gridDisksUnsafe(h3_set: []const H3Index, k: c_int, out: []H3Index) Error!void {
     const disk_size = try countToUsize(try maxGridDiskSize(k));
     try ensureLen(out.len, try checkedMulUsize(h3_set.len, disk_size));
     @memset(out, h3Null);

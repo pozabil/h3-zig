@@ -10,6 +10,12 @@ const CenterFixture = struct {
     text: []const u8,
 };
 
+const CenterRow = struct {
+    cell: h3.H3Index,
+    center: h3.LatLng,
+    resolution: c_int,
+};
+
 const center_fixtures = [_]CenterFixture{
     .{ .name = "bc05r08centers.txt", .text = @embedFile("fixtures/upstream/bc05r08centers.txt") },
     .{ .name = "bc05r09centers.txt", .text = @embedFile("fixtures/upstream/bc05r09centers.txt") },
@@ -70,19 +76,8 @@ fn assertLatLngToCellFixture(fixture: CenterFixture) !usize {
         const trimmed = std.mem.trim(u8, line, " \t\r");
         if (trimmed.len == 0) continue;
 
-        var fields = std.mem.tokenizeAny(u8, trimmed, " \t");
-        const cell_text = fields.next() orelse return error.BadFixture;
-        const lat_text = fields.next() orelse return error.BadFixture;
-        const lng_text = fields.next() orelse return error.BadFixture;
-        if (fields.next() != null) return error.BadFixture;
-
-        const expected = try std.fmt.parseInt(h3.H3Index, cell_text, 16);
-        const lat_degrees = try std.fmt.parseFloat(f64, lat_text);
-        const lng_degrees = try std.fmt.parseFloat(f64, lng_text);
-        const expected_center = h3.latLngDegrees(lat_degrees, lng_degrees);
-        const resolution = h3.getResolution(expected);
-
-        try expectEqual(expected, try h3.latLngToCell(expected_center, resolution));
+        const row = try parseCenterRow(trimmed);
+        try expectEqual(row.cell, try h3.latLngToCell(row.center, row.resolution));
         count += 1;
     }
 
@@ -97,28 +92,35 @@ fn assertCellToLatLngFixture(fixture: CenterFixture) !usize {
         const trimmed = std.mem.trim(u8, line, " \t\r");
         if (trimmed.len == 0) continue;
 
-        var fields = std.mem.tokenizeAny(u8, trimmed, " \t");
-        const cell_text = fields.next() orelse return error.BadFixture;
-        const lat_text = fields.next() orelse return error.BadFixture;
-        const lng_text = fields.next() orelse return error.BadFixture;
-        if (fields.next() != null) return error.BadFixture;
+        const row = try parseCenterRow(trimmed);
 
-        const expected = try std.fmt.parseInt(h3.H3Index, cell_text, 16);
-        const expected_center = h3.latLngDegrees(
-            try std.fmt.parseFloat(f64, lat_text),
-            try std.fmt.parseFloat(f64, lng_text),
-        );
-        const resolution = h3.getResolution(expected);
-
-        const actual_center = try h3.cellToLatLng(expected);
-        try expectApproxEqAbs(expected_center.lat, actual_center.lat, epsilon_radians);
-        try expectApproxEqAbs(expected_center.lng, actual_center.lng, epsilon_radians);
-        try expectEqual(expected, try h3.latLngToCell(actual_center, resolution));
+        const actual_center = try h3.cellToLatLng(row.cell);
+        try expectApproxEqAbs(row.center.lat, actual_center.lat, epsilon_radians);
+        try expectApproxEqAbs(row.center.lng, actual_center.lng, epsilon_radians);
+        try expectEqual(row.cell, try h3.latLngToCell(actual_center, row.resolution));
 
         count += 1;
     }
 
     return count;
+}
+
+fn parseCenterRow(line: []const u8) !CenterRow {
+    var fields = std.mem.tokenizeAny(u8, line, " \t");
+    const cell_text = fields.next() orelse return error.BadFixture;
+    const lat_text = fields.next() orelse return error.BadFixture;
+    const lng_text = fields.next() orelse return error.BadFixture;
+    if (fields.next() != null) return error.BadFixture;
+
+    const cell = try std.fmt.parseInt(h3.H3Index, cell_text, 16);
+    return .{
+        .cell = cell,
+        .center = h3.latLngDegrees(
+            try std.fmt.parseFloat(f64, lat_text),
+            try std.fmt.parseFloat(f64, lng_text),
+        ),
+        .resolution = h3.getResolution(cell),
+    };
 }
 
 fn assertBoundaryFixtureSample(text: []const u8, max_cells: usize) !void {

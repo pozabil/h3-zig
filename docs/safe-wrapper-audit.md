@@ -11,8 +11,10 @@ Scope: `src/root.zig` safe wrappers over upstream H3 `v4.5.0` public `h3api.h`.
 - Verified current automated checks:
   - `bash tools/check-api-coverage.sh`
   - `zig build test --summary all`
+  - `zig build test --summary all` from `test/consumer`
   - `zig build --summary all`
   - cross-compile smoke for Linux/Windows x64/arm64 targets
+- Verified local macOS memory checks with `/usr/bin/leaks --atExit` for all three Zig test executables.
 
 ## Audit Summary
 
@@ -25,6 +27,7 @@ Scope: `src/root.zig` safe wrappers over upstream H3 `v4.5.0` public `h3api.h`.
 | Caller-sized buffers | Pass | Wrappers compute required sizes through upstream `max*Size` APIs where available and reject undersized Zig slices with `error.MemoryBounds`. |
 | Allocator helpers | Pass | Zig-owned slices are allocated by the caller-provided allocator and returned to the caller for explicit free. |
 | C-owned linked polygons | Pass | `cellsToLinkedMultiPolygon` returns C-owned linked memory; `destroyLinkedMultiPolygon` is exposed and tested. |
+| Covered-path leak check | Pass | The current Zig test executables report `0 leaked bytes` under macOS `leaks`; this is local evidence, not a CI gate. |
 | String conversion | Pass | `h3ToString` requires `h3StringBufferLength` bytes and returns a slice excluding the C NUL. |
 | Polygon input ownership | Pass | `GeoPolygon`/`GeoLoop` wrappers pass caller-owned coordinate buffers through to C; no Zig wrapper takes ownership. |
 | Public fixture behavior | Partial | Fixture parity covers large public lat/lng and center datasets plus boundary samples; not every upstream public testapp is ported yet. |
@@ -78,3 +81,4 @@ The caller owns returned Zig slices and must free them. `GridDiskDistances.deini
 - Not every upstream public testapp or CLI fixture has been ported into Zig yet.
 - CI workflow is configured but must still run on GitHub-hosted runners after the local-only repo is pushed.
 - Cross-compile jobs are build-only unless a runner or emulator executes the target binaries.
+- Memory leak checking is currently local-only; CI does not yet run sanitizer or Valgrind-style memory gates.

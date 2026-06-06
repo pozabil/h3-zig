@@ -31,7 +31,7 @@ Scope: `src/root.zig` safe wrappers over upstream H3 `v4.5.0` public `h3api.h`.
 | Covered-path leak check | Pass | The current Zig test executables report `0 leaked bytes` under macOS `leaks`; the GitHub-hosted Linux Valgrind gate also passes. |
 | String conversion | Pass | `h3ToString` requires `h3StringBufferLength` bytes and returns a slice excluding the C NUL. |
 | Polygon input ownership | Pass | `GeoPolygon`/`GeoLoop` wrappers pass caller-owned coordinate buffers through to C; no Zig wrapper takes ownership. |
-| Public fixture behavior | Partial | Fixture parity covers large public lat/lng and center datasets plus boundary samples; not every upstream public testapp is ported yet. |
+| Public fixture behavior | Partial | Fixture parity covers large public lat/lng and center datasets plus a bounded `cellToBoundary` boundary sample; a full upstream public-test parity manifest has not been written yet. |
 
 ## Wrapper Families
 
@@ -79,5 +79,6 @@ The caller owns returned Zig slices and must free them. `GridDiskDistances.deini
 
 ## Residual Risks
 
-- Not every upstream public testapp or CLI fixture has been ported into Zig yet.
+- Upstream public-test parity is not backed by a manifest that maps each upstream H3 v4.5.0 public test/fixture to Zig coverage or an explicit exclusion reason.
+- `cellToBoundary` fixture coverage samples 200 rows from `rand05cells.txt` rather than running all 45,040 boundary cases in the default suite.
 - Cross-compile jobs are build-only unless a runner or emulator executes the target binaries.

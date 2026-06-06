@@ -50,10 +50,14 @@ jobs:
         run: zig fmt --check build.zig build.zig.zon src test
 
       - name: Check safe API coverage
-        if: runner.os != 'Windows'
+        shell: bash
         run: bash tools/check-api-coverage.sh
 
       - name: Run tests
+        run: zig build test --summary all
+
+      - name: Run consumer integration test
+        working-directory: test/consumer
         run: zig build test --summary all
 
       - name: Build library

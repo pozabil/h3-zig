@@ -1,0 +1,16 @@
+.{
+    .name = .h3_consumer,
+    .version = "0.0.0",
+    .fingerprint = 0xbac69943c68e8bf6, // Changing this has security and trust implications.
+    .minimum_zig_version = "0.15.2",
+    .dependencies = .{
+        .h3 = .{
+            .path = "../..",
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}

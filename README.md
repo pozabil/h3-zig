@@ -35,6 +35,8 @@ The tests are derived from upstream public H3 examples, CLI fixtures, and test f
 
 GitHub Actions runs native tests on Linux x64, Windows x64, macOS x64, and macOS arm64. It also cross-compiles library artifacts for Linux and Windows x64/arm64 targets.
 
+See [Support Policy](docs/support-policy.md) for the exact support matrix and release requirements. See [Safe Wrapper Audit](docs/safe-wrapper-audit.md) for current ownership, buffer, and error-semantics review notes.
+
 ## Upstream Test Parity
 
 The Zig suite ports upstream public fixture coverage rather than private H3 internals. Current fixture-backed coverage includes:

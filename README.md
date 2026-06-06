@@ -31,9 +31,20 @@ zig build test
 bash tools/check-api-coverage.sh
 ```
 
-The tests are derived from upstream public H3 examples, CLI fixtures, and test fixtures. They exercise indexing, string conversion, boundaries, grid traversal, hierarchy, compaction, directed edges, vertexes, polygons, local IJ, metrics, linked polygons, raw C access, error mapping, and a sampled upstream lat/lng fixture set.
+The tests are derived from upstream public H3 examples, CLI fixtures, and test fixtures. They exercise indexing, string conversion, boundaries, grid traversal, hierarchy, compaction, directed edges, vertexes, polygons, local IJ, metrics, linked polygons, raw C access, error mapping, 55,000 upstream random center fixture rows, and an upstream boundary fixture sample.
 
 GitHub Actions runs native tests on Linux x64, Windows x64, macOS x64, and macOS arm64. It also cross-compiles library artifacts for Linux and Windows x64/arm64 targets.
+
+## Upstream Test Parity
+
+The Zig suite ports upstream public fixture coverage rather than private H3 internals. Current fixture-backed coverage includes:
+
+- `testLatLngToCell`: all upstream `rand05..rand15centers` rows plus selected base-cell hierarchy center rows.
+- `testCellToLatLng`: upstream `res00..res03ic` rows.
+- `testCellToBoundary`: an upstream `rand05cells` boundary sample.
+- Additional public contracts from upstream examples and CLI fixtures for grid traversal, hierarchy, compaction, directed edges, vertexes, polygons, metrics, local IJ, and error cases.
+
+Internal upstream tests that depend on private headers, bit macros, base-cell internals, or FaceIJK internals are intentionally excluded from the Zig binding contract.
 
 ## Ownership
 

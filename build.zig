@@ -55,9 +55,21 @@ pub fn build(b: *std.Build) void {
         }),
     });
 
+    const upstream_fixture_tests = b.addTest(.{
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("test/upstream_public_fixtures.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{ .name = "h3", .module = h3 },
+            },
+        }),
+    });
+
     const test_step = b.step("test", "Run unit and public-contract tests");
     test_step.dependOn(&b.addRunArtifact(tests).step);
     test_step.dependOn(&b.addRunArtifact(contract_tests).step);
+    test_step.dependOn(&b.addRunArtifact(upstream_fixture_tests).step);
 }
 
 fn addH3C(b: *std.Build, module: *std.Build.Module, target: std.Build.ResolvedTarget) void {

@@ -28,9 +28,12 @@ pub fn main() !void {
 
 ```sh
 zig build test
+bash tools/check-api-coverage.sh
 ```
 
-The tests are derived from upstream public H3 examples and test fixtures. They exercise indexing, string conversion, boundaries, grid traversal, hierarchy, compaction, directed edges, vertexes, polygons, local IJ, metrics, linked polygons, and raw C access.
+The tests are derived from upstream public H3 examples, CLI fixtures, and test fixtures. They exercise indexing, string conversion, boundaries, grid traversal, hierarchy, compaction, directed edges, vertexes, polygons, local IJ, metrics, linked polygons, raw C access, error mapping, and a sampled upstream lat/lng fixture set.
+
+GitHub Actions runs native tests on Linux x64, Windows x64, macOS x64, and macOS arm64. It also cross-compiles library artifacts for Linux and Windows x64/arm64 targets.
 
 ## Ownership
 

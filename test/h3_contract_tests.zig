@@ -38,6 +38,41 @@ test "latLngToCell rejects invalid resolutions and coordinates like upstream tes
     try std.testing.expectError(error.LatLngDomain, h3.latLngToCell(h3.latLngRadians(std.math.inf(f64), -std.math.inf(f64)), 1));
 }
 
+test "latLngToCell matches upstream rand05 center fixture sample" {
+    const fixtures = [_]struct {
+        cell: [:0]const u8,
+        lat_degrees: f64,
+        lng_degrees: f64,
+    }{
+        .{ .cell = "850dab63fffffff", .lat_degrees = 67.194014, .lng_degrees = 191.598258 },
+        .{ .cell = "850336b7fffffff", .lat_degrees = 87.372197, .lng_degrees = 166.176925 },
+        .{ .cell = "85440d83fffffff", .lat_degrees = 27.350796, .lng_degrees = 272.064443 },
+        .{ .cell = "85f2316bfffffff", .lat_degrees = -79.704099, .lng_degrees = 209.043753 },
+        .{ .cell = "8503053bfffffff", .lat_degrees = 87.178177, .lng_degrees = 270.372677 },
+        .{ .cell = "85d70b6bfffffff", .lat_degrees = -52.743559, .lng_degrees = 34.199852 },
+        .{ .cell = "850ee59bfffffff", .lat_degrees = 55.810429, .lng_degrees = 282.843962 },
+        .{ .cell = "85eb885bfffffff", .lat_degrees = -60.693672, .lng_degrees = 187.742078 },
+        .{ .cell = "85026c63fffffff", .lat_degrees = 74.269230, .lng_degrees = 290.224650 },
+        .{ .cell = "857a9983fffffff", .lat_degrees = 8.317316, .lng_degrees = 47.328903 },
+        .{ .cell = "85a49973fffffff", .lat_degrees = -27.648726, .lng_degrees = 324.695477 },
+        .{ .cell = "850025cbfffffff", .lat_degrees = 76.626635, .lng_degrees = 26.855924 },
+        .{ .cell = "85aef0d3fffffff", .lat_degrees = -30.181101, .lng_degrees = 97.598398 },
+        .{ .cell = "8514d353fffffff", .lat_degrees = 48.481818, .lng_degrees = 137.624788 },
+        .{ .cell = "857ad90bfffffff", .lat_degrees = 9.391036, .lng_degrees = 40.202655 },
+        .{ .cell = "852eb6dbfffffff", .lat_degrees = 46.873620, .lng_degrees = 153.170110 },
+        .{ .cell = "8545583bfffffff", .lat_degrees = 25.900462, .lng_degrees = 268.491633 },
+        .{ .cell = "850a5a13fffffff", .lat_degrees = 69.673523, .lng_degrees = 106.502495 },
+        .{ .cell = "857c11a3fffffff", .lat_degrees = 0.278038, .lng_degrees = 339.938836 },
+        .{ .cell = "850db26bfffffff", .lat_degrees = 67.773124, .lng_degrees = 174.912440 },
+    };
+
+    for (fixtures) |fixture| {
+        const expected = try h3.stringToH3(fixture.cell);
+        const actual = try h3.latLngToCell(h3.latLngDegrees(fixture.lat_degrees, fixture.lng_degrees), h3.getResolution(expected));
+        try expectEqual(expected, actual);
+    }
+}
+
 test "cellToBoundary edge cases match upstream fixed public fixtures" {
     const issue_45 = try h3.stringToH3("894cc536537ffff");
     const boundary = try h3.cellToBoundary(issue_45);
@@ -167,6 +202,18 @@ test "resolution, base cells, pentagons, digits, faces, and metrics are availabl
     try expect((try h3.getHexagonEdgeLengthAvgM(5)) > 0);
 }
 
+test "public error contracts are preserved for buffer, resolution, digit, and edge inputs" {
+    const cell = try h3.stringToH3("8a2a1072b59ffff");
+    var short_buffer: [2]u8 = undefined;
+    try std.testing.expectError(error.MemoryBounds, h3.h3ToString(cell, &short_buffer));
+    try std.testing.expectError(error.ResolutionDomain, h3.getNumCells(16));
+    try std.testing.expectError(error.ResolutionDomain, h3.constructCell(16, 0, &.{}));
+    try std.testing.expectError(error.BaseCellDomain, h3.constructCell(1, 122, &.{0}));
+    try std.testing.expectError(error.DigitDomain, h3.constructCell(1, 0, &.{7}));
+    try std.testing.expectError(error.DeletedDigit, h3.constructCell(1, 4, &.{1}));
+    try std.testing.expectError(error.DirectedEdgeInvalid, h3.getDirectedEdgeOrigin(cell));
+}
+
 test "directed edge public contract and reverse behavior" {
     const origin = try h3.latLngToCell(h3.latLngRadians(0.659966917655, -2.1364398519396), 9);
     const ring = try h3.gridRingAlloc(allocator, origin, 1);
@@ -272,6 +319,12 @@ test "great circle distance, local IJ, and raw namespace are usable" {
 
     var raw_out: h3.H3Index = 0;
     try expectEqual(@as(h3.H3Error, h3.c.E_SUCCESS), h3.raw.latLngToCell(&a, 10, &raw_out));
+}
+
+test "great circle distance matches upstream CLI fixture" {
+    const a = h3.latLngDegrees(0, 1);
+    const b = h3.latLngDegrees(1, 2);
+    try expectApproxEqAbs(@as(f64, 157.2495585118), h3.greatCircleDistanceKm(a, b), 0.0000000001);
 }
 
 fn contains(comptime T: type, haystack: []const T, needle: T) bool {

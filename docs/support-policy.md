@@ -14,7 +14,7 @@ These targets are configured to run `zig build test`, the consumer integration t
 |---|---|---|
 | Linux x64 | `ubuntu-24.04` | Candidate until first green CI run |
 | Windows x64 | `windows-2025` | Candidate until first green CI run |
-| macOS x64 | `macos-13` | Candidate until first green CI run |
+| macOS Intel | `macos-15-intel` | Candidate until first green CI run |
 | macOS arm64 | `macos-14` | Candidate until first green CI run |
 
 ## Candidate Build-Only Matrix
@@ -44,6 +44,7 @@ Before a release is labeled production-ready:
 
 - GitHub Actions must pass for every supported native runtime platform.
 - Cross-compile smoke jobs must pass for every build-only target.
+- Hosted macOS jobs must complete within the configured workflow timeouts; queued or hung runner jobs are not treated as a supported-platform signal.
 - The consumer integration test must pass.
 - Public H3 API coverage must be complete.
 - Safe wrapper ownership, buffer, and error semantics must have a current audit document.

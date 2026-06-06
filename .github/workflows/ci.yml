@@ -18,6 +18,7 @@ jobs:
   native:
     name: native-${{ matrix.name }}
     runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -27,7 +28,7 @@ jobs:
           - name: windows-x64
             runner: windows-2025
           - name: macos-x64
-            runner: macos-13
+            runner: macos-15-intel
           - name: macos-arm64
             runner: macos-14
 
@@ -44,28 +45,35 @@ jobs:
           cache-key: native-${{ matrix.name }}-zig-0.15.2
 
       - name: Show Zig version
+        timeout-minutes: 1
         run: zig version
 
       - name: Check formatting
+        timeout-minutes: 2
         run: zig fmt --check build.zig build.zig.zon src test
 
       - name: Check safe API coverage
         shell: bash
+        timeout-minutes: 2
         run: bash tools/check-api-coverage.sh
 
       - name: Run tests
+        timeout-minutes: 10
         run: zig build test --summary all
 
       - name: Run consumer integration test
         working-directory: test/consumer
+        timeout-minutes: 5
         run: zig build test --summary all
 
       - name: Build library
+        timeout-minutes: 5
         run: zig build --summary all
 
   cross-compile:
     name: cross-${{ matrix.target }}
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
@@ -88,4 +96,5 @@ jobs:
           cache-key: cross-${{ matrix.target }}-zig-0.15.2
 
       - name: Cross-compile library
+        timeout-minutes: 5
         run: zig build -Dtarget=${{ matrix.target }} --summary all

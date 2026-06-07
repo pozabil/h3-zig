@@ -54,4 +54,4 @@ Before a release is labeled production-ready:
 - Public H3 API coverage must be complete.
 - Safe wrapper ownership, buffer, and error semantics must have a current audit document.
 - Memory checking must pass for covered safe-wrapper paths through the Linux Valgrind CI gate, pinned to baseline CPU features, or an explicitly recorded equivalent platform memory checker.
-- Any unported upstream public tests must be documented as residual risk or explicitly scoped out.
+- Any unported or partially covered upstream public tests and fixtures must be documented in `docs/upstream-test-coverage.md` as residual risk or explicitly scoped out.

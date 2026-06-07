@@ -10,6 +10,9 @@ on:
 permissions:
   contents: read
 
+env:
+  ZIG_VERSION: 0.15.2
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -31,8 +34,8 @@ jobs:
         timeout-minutes: 5
         uses: mlugg/setup-zig@v2.2.1
         with:
-          version: 0.15.2
-          cache-key: checks-zig-0.15.2
+          version: ${{ env.ZIG_VERSION }}
+          cache-key: checks-zig-${{ env.ZIG_VERSION }}
 
       - name: Show Zig version
         timeout-minutes: 1
@@ -97,8 +100,8 @@ jobs:
         timeout-minutes: 5
         uses: mlugg/setup-zig@v2.2.1
         with:
-          version: 0.15.2
-          cache-key: native-${{ matrix.name }}-${{ matrix.optimize }}-zig-0.15.2
+          version: ${{ env.ZIG_VERSION }}
+          cache-key: native-${{ matrix.name }}-${{ matrix.optimize }}-zig-${{ env.ZIG_VERSION }}
 
       - name: Show Zig version
         timeout-minutes: 1
@@ -133,8 +136,8 @@ jobs:
         timeout-minutes: 5
         uses: mlugg/setup-zig@v2.2.1
         with:
-          version: 0.15.2
-          cache-key: memory-valgrind-zig-0.15.2
+          version: ${{ env.ZIG_VERSION }}
+          cache-key: memory-valgrind-zig-${{ env.ZIG_VERSION }}
 
       - name: Install Valgrind
         timeout-minutes: 5
@@ -173,8 +176,8 @@ jobs:
         timeout-minutes: 5
         uses: mlugg/setup-zig@v2.2.1
         with:
-          version: 0.15.2
-          cache-key: cross-${{ matrix.target }}-${{ matrix.optimize }}-zig-0.15.2
+          version: ${{ env.ZIG_VERSION }}
+          cache-key: cross-${{ matrix.target }}-${{ matrix.optimize }}-zig-${{ env.ZIG_VERSION }}
 
       - name: Cross-compile library
         timeout-minutes: 5

@@ -114,11 +114,11 @@ pub fn check(code: H3Error) Error!void {
 }
 
 pub fn describeErrorCode(code: H3Error) []const u8 {
-    return std.mem.span(c.describeH3Error(code));
+    return describeH3Error(code);
 }
 
 pub fn describeH3Error(code: H3Error) []const u8 {
-    return describeErrorCode(code);
+    return std.mem.span(c.describeH3Error(code));
 }
 
 pub fn describeError(err: Error) []const u8 {

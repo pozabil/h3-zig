@@ -9,11 +9,13 @@ Current status:
 - Public C API functions: 79
 - Safe Zig wrapper names: 79 / 79
 - Raw C access: every entry is also available as `h3.raw.<function>` and `h3.c.<function>`.
-- Automated guard: `bash tools/check-api-coverage.sh`
+- Automated guard: `bash tools/check-api-coverage.sh` verifies wrapper names, matching `c.<function>` references in wrapper bodies, and this matrix.
 
 The safe wrapper name intentionally matches the C function name where possible. Zig-only convenience helpers are listed after the matrix.
 
 The `Coverage evidence` column is a traceability note, not a claim that every wrapper has a separate one-function-only assertion. Some low-level or unsafe variants are covered through the same public wrapper family and traversal contract tests.
+
+The API coverage script is still a static guardrail. It can catch missing wrappers, wrappers that no longer reference the matching raw C entrypoint, and missing matrix rows; semantic correctness for ownership, buffer sizes, error mapping, and edge cases is covered by tests and `docs/safe-wrapper-audit.md`.
 
 ## Function Matrix
 

@@ -1,14 +1,21 @@
 # Support Policy
 
-This package targets Zig `0.15.2` on the default branch and vendors upstream H3 `v4.5.0`.
+This package vendors upstream H3 `v4.5.0`. Zig support is branch-specific and follows the table below.
 
 ## Support Rule
 
-A platform is considered supported only after the GitHub Actions `CI` workflow passes for that platform on the default branch. Local cross-compilation is useful evidence, but it is not a substitute for a green hosted runner when runtime behavior is claimed.
+A Zig version or platform is considered supported only after the GitHub Actions `CI` workflow passes for that version and platform on the relevant branch. Local cross-compilation is useful evidence, but it is not a substitute for a green hosted runner when runtime behavior is claimed.
 
-Current status: the GitHub-hosted `CI` workflow has passed for the native runtime matrix and build-only matrix on the default branch. The Linux Valgrind memory gate is pinned to `x86_64-linux-gnu` with `baseline` CPU features and needs a fresh hosted run after workflow changes.
+Current status: the GitHub-hosted `CI` workflow has passed for the native runtime matrix, Linux Valgrind memory gate, and build-only matrix on the branch lines listed below.
 
-The `support/zig-0.16` branch is a Zig `0.16.0` compatibility branch. It runs the same CI gates with Zig `0.16.0`; support is not claimed until that hosted workflow is green.
+## Supported Zig Versions
+
+| Zig version | Branch line | Status | Evidence |
+|---|---|---|---|
+| `0.15.2` | `main` | Supported | Default-branch hosted `CI`. |
+| `0.16.0` | `support/zig-0.16` | Supported | Hosted `CI` with the same native, memory, and build-only gates. |
+
+`build.zig.zon` currently keeps `.minimum_zig_version = "0.15.2"` because this code line remains locally compatible with Zig `0.15.2`. Adding hosted CI for multiple Zig versions on one branch is a separate release-policy decision.
 
 ## Supported Native Runtime Matrix
 
@@ -39,7 +46,7 @@ These targets are configured as cross-compile smoke builds. They prove that the 
 
 The package does not currently claim support for:
 
-- Zig versions other than `0.15.2` on the default branch.
+- Zig versions other than those listed in Supported Zig Versions.
 - WASI/WebAssembly.
 - Android, iOS, tvOS, watchOS, or embedded targets.
 - BSD and other Unix targets not listed above.

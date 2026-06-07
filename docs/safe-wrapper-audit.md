@@ -15,7 +15,7 @@ Scope: `src/root.zig` safe wrappers over upstream H3 `v4.5.0` public `h3api.h`.
   - `zig build --summary all`
   - cross-compile smoke for Linux/Windows x64/arm64 targets
 - Verified local macOS memory checks with `/usr/bin/leaks --atExit` for all three Zig test executables.
-- Configured Linux CI memory checks through `zig build test-valgrind -Dtarget=x86_64-linux-gnu -Dcpu=baseline --summary all`.
+- Verified Linux CI memory checks through `zig build test-valgrind -Dtarget=x86_64-linux-gnu -Dcpu=baseline --summary all`.
 - Public API mapping is documented in `docs/public-api-matrix.md`.
 - Upstream test and fixture parity is documented in `docs/upstream-test-coverage.md`.
 
@@ -30,7 +30,7 @@ Scope: `src/root.zig` safe wrappers over upstream H3 `v4.5.0` public `h3api.h`.
 | Caller-sized buffers | Pass | Wrappers compute required sizes through upstream `max*Size` APIs where available and reject undersized Zig slices with `error.MemoryBounds`. |
 | Allocator helpers | Pass | Zig-owned slices are allocated by the caller-provided allocator and returned to the caller for explicit free. |
 | C-owned linked polygons | Pass | `cellsToLinkedMultiPolygon` returns C-owned linked memory; `destroyLinkedMultiPolygon` is exposed and tested. |
-| Covered-path leak check | Partial | The current Zig test executables report `0 leaked bytes` under macOS `leaks`; the Linux Valgrind gate is configured with baseline CPU features and needs a fresh hosted CI run after that workflow change. |
+| Covered-path leak check | Pass | The current Zig test executables report `0 leaked bytes` under macOS `leaks`; the Linux Valgrind gate passes in hosted CI with baseline CPU features. |
 | String conversion | Pass | `h3ToString` requires `h3StringBufferLength` bytes and returns a slice excluding the C NUL. |
 | Polygon input ownership | Pass | `GeoPolygon`/`GeoLoop` wrappers pass caller-owned coordinate buffers through to C; no Zig wrapper takes ownership. |
 | Public fixture behavior | Partial | Fixture parity covers large public lat/lng and center datasets plus a bounded `cellToBoundary` boundary sample. `docs/upstream-test-coverage.md` lists covered, partial, excluded, and not-applicable upstream tests and fixtures. |
@@ -83,5 +83,4 @@ The caller owns returned Zig slices and must free them. `GridDiskDistances.deini
 
 - `cellToBoundary` fixture coverage samples 200 rows from `rand05cells.txt` rather than running all 45,040 boundary cases in the default suite.
 - Additional upstream fixture groups remain partially covered as documented in `docs/upstream-test-coverage.md`.
-- The Linux Valgrind memory gate needs a fresh hosted CI run after pinning the test target to baseline CPU features.
 - Cross-compile jobs are build-only unless a runner or emulator executes the target binaries.

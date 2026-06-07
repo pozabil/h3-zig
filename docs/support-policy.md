@@ -19,7 +19,7 @@ Current status: the GitHub-hosted `CI` workflow has passed the full gate set for
 
 ## Supported Native Runtime Matrix
 
-These targets are configured to run `zig build test`, the consumer integration test, formatting, API coverage, and the library build in GitHub Actions:
+These targets are configured to run `zig build test`, the consumer integration test, and the library build in GitHub Actions for each supported Zig version and configured optimization mode. Formatting and API coverage run separately on Linux for each supported Zig version.
 
 | Platform | Runner | Status |
 |---|---|---|
@@ -56,8 +56,8 @@ The package does not currently claim support for:
 
 Before a release is labeled production-ready:
 
-- GitHub Actions must pass for every supported native runtime platform.
-- Cross-compile smoke jobs must pass for every build-only target.
+- GitHub Actions must pass for every supported Zig version, native runtime platform, and configured optimization mode.
+- Cross-compile smoke jobs must pass for every supported Zig version, build-only target, and configured optimization mode.
 - Hosted macOS jobs must complete within the configured workflow timeouts; queued or hung runner jobs are not treated as a supported-platform signal.
 - The consumer integration test must pass.
 - Public H3 API coverage must be complete.

@@ -107,7 +107,7 @@ These functions do not correspond to separate upstream `H3_EXPORT(...)` entries.
 
 | Helper | Purpose |
 |---|---|
-| `h3.c`, `h3.raw` | Direct `@cImport("h3api.h")` escape hatch. |
+| `h3.c`, `h3.raw` | Build-system translated `h3api.h` escape hatch. |
 | `h3.Error`, `h3.errorFromCode`, `h3.errorToCode`, `h3.check`, `h3.describeErrorCode`, `h3.describeError` | Zig error-set mapping for `H3Error`. |
 | `h3.latLngRadians`, `h3.latLngDegrees` | `LatLng` constructors. |
 | `h3.boundaryVertices` | Safe slice view over `CellBoundary.verts`. |

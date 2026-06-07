@@ -1,6 +1,6 @@
 const std = @import("std");
 
-pub const c = @import("c.zig").c;
+pub const c = @import("h3_c");
 pub const raw = c;
 
 pub const H3Index = c.H3Index;

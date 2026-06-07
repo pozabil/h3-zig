@@ -25,10 +25,14 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
+    const h3_c = translateH3C(b, target, optimize);
     const h3 = b.addModule("h3", .{
         .root_source_file = b.path("src/root.zig"),
         .target = target,
         .optimize = optimize,
+        .imports = &.{
+            .{ .name = "h3_c", .module = h3_c },
+        },
         .link_libc = true,
     });
     addH3C(b, h3, target);
@@ -75,6 +79,17 @@ pub fn build(b: *std.Build) void {
     addValgrindRun(b, valgrind_step, tests);
     addValgrindRun(b, valgrind_step, contract_tests);
     addValgrindRun(b, valgrind_step, upstream_fixture_tests);
+}
+
+fn translateH3C(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode) *std.Build.Module {
+    const translate_c = b.addTranslateC(.{
+        .root_source_file = b.path("src/c.h"),
+        .target = target,
+        .optimize = optimize,
+        .link_libc = true,
+    });
+    translate_c.addIncludePath(b.path("vendor/h3/src/h3lib/include"));
+    return translate_c.createModule();
 }
 
 fn addH3C(b: *std.Build, module: *std.Build.Module, target: std.Build.ResolvedTarget) void {

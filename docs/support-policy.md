@@ -1,12 +1,14 @@
 # Support Policy
 
-This package targets Zig `0.15.2` and vendors upstream H3 `v4.5.0`.
+This package targets Zig `0.15.2` on the default branch and vendors upstream H3 `v4.5.0`.
 
 ## Support Rule
 
 A platform is considered supported only after the GitHub Actions `CI` workflow passes for that platform on the default branch. Local cross-compilation is useful evidence, but it is not a substitute for a green hosted runner when runtime behavior is claimed.
 
 Current status: the GitHub-hosted `CI` workflow has passed for the native runtime matrix and build-only matrix on the default branch. The Linux Valgrind memory gate is pinned to `x86_64-linux-gnu` with `baseline` CPU features and needs a fresh hosted run after workflow changes.
+
+The `support/zig-0.16` branch is a Zig `0.16.0` compatibility branch. It runs the same CI gates with Zig `0.16.0`; support is not claimed until that hosted workflow is green.
 
 ## Supported Native Runtime Matrix
 
@@ -37,7 +39,7 @@ These targets are configured as cross-compile smoke builds. They prove that the 
 
 The package does not currently claim support for:
 
-- Zig versions other than `0.15.2`.
+- Zig versions other than `0.15.2` on the default branch.
 - WASI/WebAssembly.
 - Android, iOS, tvOS, watchOS, or embedded targets.
 - BSD and other Unix targets not listed above.

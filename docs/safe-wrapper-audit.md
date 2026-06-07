@@ -24,7 +24,7 @@ Scope: `src/root.zig` safe wrappers over upstream H3 `v4.5.0` public `h3api.h`.
 | Area | Status | Notes |
 |---|---|---|
 | Public API coverage | Pass | `tools/check-api-coverage.sh` fails if a public H3 entrypoint lacks a safe wrapper name, the wrapper no longer references the matching `c.<function>`, or `docs/public-api-matrix.md` lacks a row for it. Semantic ownership and buffer behavior is covered by tests and this audit, not by the static script alone. |
-| Raw API escape hatch | Pass | `h3.raw` and `h3.c` expose direct `@cImport("h3api.h")` access. |
+| Raw API escape hatch | Pass | `h3.raw` and `h3.c` expose build-system translated `h3api.h` access. |
 | Error mapping | Pass | All documented `H3ErrorCodes` map to `h3.Error`; unknown codes map to `error.Unknown`. |
 | ABI type aliases | Pass | Unit tests check representative imported C type sizes and H3 version constants. |
 | Caller-sized buffers | Pass | Wrappers compute required sizes through upstream `max*Size` APIs where available and reject undersized Zig slices with `error.MemoryBounds`. |

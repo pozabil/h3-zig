@@ -1,21 +1,21 @@
 # Support Policy
 
-This package vendors upstream H3 `v4.5.0`. Zig support is branch-specific and follows the table below.
+This package vendors upstream H3 `v4.5.0`. Zig support follows the CI matrix below.
 
 ## Support Rule
 
 A Zig version or platform is considered supported only after the GitHub Actions `CI` workflow passes for that version and platform on the relevant branch. Local cross-compilation is useful evidence, but it is not a substitute for a green hosted runner when runtime behavior is claimed.
 
-Current status: the GitHub-hosted `CI` workflow has passed for the native runtime matrix, Linux Valgrind memory gate, and build-only matrix on the branch lines listed below.
+Current status: the GitHub-hosted `CI` workflow is configured to run the full gate set for Zig `0.15.2` and Zig `0.16.0`. Treat both versions as supported on a branch only after that branch has a green hosted `CI` run with the two-version matrix.
 
 ## Supported Zig Versions
 
-| Zig version | Branch line | Status | Evidence |
-|---|---|---|---|
-| `0.15.2` | `main` | Supported | Default-branch hosted `CI`. |
-| `0.16.0` | `support/zig-0.16` | Supported | Hosted `CI` with the same native, memory, and build-only gates. |
+| Zig version | CI coverage | Status rule |
+|---|---|---|
+| `0.15.2` | Formatting, API coverage, native tests, consumer tests, Valgrind, and cross-compile smoke jobs. | Supported after hosted `CI` is green for the branch. |
+| `0.16.0` | Formatting, API coverage, native tests, consumer tests, Valgrind, and cross-compile smoke jobs. | Supported after hosted `CI` is green for the branch. |
 
-`build.zig.zon` currently keeps `.minimum_zig_version = "0.15.2"` because this code line remains locally compatible with Zig `0.15.2`. Adding hosted CI for multiple Zig versions on one branch is a separate release-policy decision.
+`build.zig.zon` keeps `.minimum_zig_version = "0.15.2"` because this code line is intended to remain compatible with Zig `0.15.2` while also being tested on Zig `0.16.0`.
 
 ## Supported Native Runtime Matrix
 

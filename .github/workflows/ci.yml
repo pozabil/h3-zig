@@ -11,18 +11,21 @@ on:
 permissions:
   contents: read
 
-env:
-  ZIG_VERSION: 0.16.0
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   checks:
-    name: checks
+    name: checks-zig-${{ matrix.zig-version }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        zig-version:
+          - 0.15.2
+          - 0.16.0
 
     steps:
       - name: Checkout
@@ -35,8 +38,8 @@ jobs:
         timeout-minutes: 5
         uses: mlugg/setup-zig@v2.2.1
         with:
-          version: ${{ env.ZIG_VERSION }}
-          cache-key: checks-zig-${{ env.ZIG_VERSION }}
+          version: ${{ matrix.zig-version }}
+          cache-key: checks-zig-${{ matrix.zig-version }}
 
       - name: Show Zig version
         timeout-minutes: 1
@@ -52,43 +55,29 @@ jobs:
         run: bash tools/check-api-coverage.sh
 
   native:
-    name: native-${{ matrix.name }}-${{ matrix.optimize }}
-    runs-on: ${{ matrix.runner }}
+    name: native-zig-${{ matrix.zig-version }}-${{ matrix.platform.name }}-${{ matrix.optimize }}
+    runs-on: ${{ matrix.platform.runner }}
     timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
-        include:
+        zig-version:
+          - 0.15.2
+          - 0.16.0
+        optimize:
+          - Debug
+          - ReleaseSafe
+        platform:
           - name: linux-x64
             runner: ubuntu-24.04
-            optimize: Debug
-          - name: linux-x64
-            runner: ubuntu-24.04
-            optimize: ReleaseSafe
           - name: linux-arm64
             runner: ubuntu-24.04-arm
-            optimize: Debug
-          - name: linux-arm64
-            runner: ubuntu-24.04-arm
-            optimize: ReleaseSafe
           - name: windows-x64
             runner: windows-2025
-            optimize: Debug
-          - name: windows-x64
-            runner: windows-2025
-            optimize: ReleaseSafe
           - name: macos-x64
             runner: macos-15-intel
-            optimize: Debug
-          - name: macos-x64
-            runner: macos-15-intel
-            optimize: ReleaseSafe
           - name: macos-arm64
             runner: macos-14
-            optimize: Debug
-          - name: macos-arm64
-            runner: macos-14
-            optimize: ReleaseSafe
 
     steps:
       - name: Checkout
@@ -101,8 +90,8 @@ jobs:
         timeout-minutes: 5
         uses: mlugg/setup-zig@v2.2.1
         with:
-          version: ${{ env.ZIG_VERSION }}
-          cache-key: native-${{ matrix.name }}-${{ matrix.optimize }}-zig-${{ env.ZIG_VERSION }}
+          version: ${{ matrix.zig-version }}
+          cache-key: native-${{ matrix.platform.name }}-${{ matrix.optimize }}-zig-${{ matrix.zig-version }}
 
       - name: Show Zig version
         timeout-minutes: 1
@@ -122,9 +111,15 @@ jobs:
         run: zig build -Doptimize=${{ matrix.optimize }} --summary all
 
   memory:
-    name: memory-valgrind
+    name: memory-valgrind-zig-${{ matrix.zig-version }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        zig-version:
+          - 0.15.2
+          - 0.16.0
 
     steps:
       - name: Checkout
@@ -137,8 +132,8 @@ jobs:
         timeout-minutes: 5
         uses: mlugg/setup-zig@v2.2.1
         with:
-          version: ${{ env.ZIG_VERSION }}
-          cache-key: memory-valgrind-zig-${{ env.ZIG_VERSION }}
+          version: ${{ matrix.zig-version }}
+          cache-key: memory-valgrind-zig-${{ matrix.zig-version }}
 
       - name: Install Valgrind
         timeout-minutes: 5
@@ -151,12 +146,15 @@ jobs:
         run: zig build test-valgrind -Dtarget=x86_64-linux-gnu -Dcpu=baseline --summary all
 
   cross-compile:
-    name: cross-${{ matrix.target }}-${{ matrix.optimize }}
+    name: cross-zig-${{ matrix.zig-version }}-${{ matrix.target }}-${{ matrix.optimize }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
+        zig-version:
+          - 0.15.2
+          - 0.16.0
         optimize:
           - Debug
           - ReleaseSafe
@@ -177,8 +175,8 @@ jobs:
         timeout-minutes: 5
         uses: mlugg/setup-zig@v2.2.1
         with:
-          version: ${{ env.ZIG_VERSION }}
-          cache-key: cross-${{ matrix.target }}-${{ matrix.optimize }}-zig-${{ env.ZIG_VERSION }}
+          version: ${{ matrix.zig-version }}
+          cache-key: cross-${{ matrix.target }}-${{ matrix.optimize }}-zig-${{ matrix.zig-version }}
 
       - name: Cross-compile library
         timeout-minutes: 5

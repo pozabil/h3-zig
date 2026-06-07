@@ -13,6 +13,25 @@ H3 indexes geographies into a hierarchical hexagonal grid. This package vendors 
 - `h3.raw` / `h3.c`: translated `h3api.h` access to the complete public C API.
 - top-level `h3.*` functions: thin Zig wrappers that return values, accept slices, and map `H3Error` codes to `h3.Error`.
 
+## Install
+
+Add the tagged package archive to your `build.zig.zon`:
+
+```sh
+zig fetch --save https://github.com/pozabil/h3-zig/archive/refs/tags/v0.1.0.tar.gz
+```
+
+Then import the package module from your `build.zig`:
+
+```zig
+const h3 = b.dependency("h3", .{
+    .target = target,
+    .optimize = optimize,
+});
+
+exe.root_module.addImport("h3", h3.module("h3"));
+```
+
 ## Use
 
 Add the package as a Zig dependency, then import the exposed `h3` module:

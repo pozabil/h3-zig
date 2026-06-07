@@ -35,7 +35,7 @@ cd test/consumer && zig build test
 
 The tests are derived from upstream public H3 examples, CLI fixtures, and test fixtures. They exercise indexing, string conversion, boundaries, grid traversal, hierarchy, compaction, directed edges, vertexes, polygons, local IJ, metrics, linked polygons, raw C access, error mapping, 55,000 upstream random center fixture rows, and an upstream boundary fixture sample.
 
-`zig build test-valgrind` runs the same unit and public-contract test executables under Valgrind on Linux systems with Valgrind installed.
+`zig build test-valgrind` runs the same unit and public-contract test executables under Valgrind on Linux systems with Valgrind installed. In CI, this gate pins `x86_64-linux-gnu` with `baseline` CPU features so the result does not depend on the specific hosted runner CPU.
 
 GitHub Actions runs native tests on Linux x64, Linux arm64, Windows x64, macOS Intel, and macOS arm64 in both Debug and ReleaseSafe modes. It also runs a Linux Valgrind memory gate and cross-compiles library artifacts for Linux and Windows x64/arm64 targets. The supported native runtime matrix and build-only cross-compile matrix have passed the GitHub-hosted `CI` workflow on the default branch.
 

@@ -144,7 +144,7 @@ jobs:
 
       - name: Run tests under Valgrind
         timeout-minutes: 10
-        run: zig build test-valgrind --summary all
+        run: zig build test-valgrind -Dtarget=x86_64-linux-gnu -Dcpu=baseline --summary all
 
   cross-compile:
     name: cross-${{ matrix.target }}-${{ matrix.optimize }}

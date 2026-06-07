@@ -30,7 +30,7 @@ Scope: `src/root.zig` safe wrappers over upstream H3 `v4.5.0` public `h3api.h`.
 | Caller-sized buffers | Pass | Wrappers compute required sizes through upstream `max*Size` APIs where available and reject undersized Zig slices with `error.MemoryBounds`. |
 | Allocator helpers | Pass | Zig-owned slices are allocated by the caller-provided allocator and returned to the caller for explicit free. |
 | C-owned linked polygons | Pass | `cellsToLinkedMultiPolygon` returns C-owned linked memory; `destroyLinkedMultiPolygon` is exposed and tested. |
-| Covered-path leak check | Pass | The current Zig test executables report `0 leaked bytes` under macOS `leaks`; the Linux Valgrind gate passes in hosted CI with baseline CPU features. |
+| Covered-path leak check | Pass | The current Zig test executables report `0 leaked bytes` under macOS `leaks`; the Linux Valgrind gate passes in hosted CI with baseline CPU features for supported Zig versions. |
 | String conversion | Pass | `h3ToString` requires `h3StringBufferLength` bytes and returns a slice excluding the C NUL. |
 | Polygon input ownership | Pass | `GeoPolygon`/`GeoLoop` wrappers pass caller-owned coordinate buffers through to C; no Zig wrapper takes ownership. |
 | Public fixture behavior | Partial | Fixture parity covers large public lat/lng and center datasets plus a bounded `cellToBoundary` boundary sample. `docs/upstream-test-coverage.md` lists covered, partial, excluded, and not-applicable upstream tests and fixtures. |

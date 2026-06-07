@@ -1,6 +1,6 @@
 # Upstream Test Coverage
 
-Baseline: upstream H3 `v4.5.0`, commit `1b536c34225191ba24a75a840f634d4a48c3b206`.
+Baseline: upstream H3 [`v4.5.0`](https://github.com/uber/h3/tree/v4.5.0), commit `1b536c34225191ba24a75a840f634d4a48c3b206`.
 
 This document maps upstream public tests and fixtures to the current Zig binding test coverage. It is intentionally scoped to the binding contract:
 

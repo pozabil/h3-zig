@@ -1,6 +1,6 @@
 # Public API Matrix
 
-Baseline: upstream H3 `v4.5.0`, vendored commit `1b536c34225191ba24a75a840f634d4a48c3b206`.
+Baseline: upstream H3 [`v4.5.0`](https://github.com/uber/h3/tree/v4.5.0), vendored commit `1b536c34225191ba24a75a840f634d4a48c3b206`.
 
 This matrix maps every public C function exported from `vendor/h3/src/h3lib/include/h3api.h` with `H3_EXPORT(...)` to the top-level safe Zig wrapper in `src/root.zig`.
 
